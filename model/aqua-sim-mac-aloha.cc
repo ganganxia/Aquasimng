@@ -249,7 +249,9 @@ void AquaSimAloha::SendPkt(Ptr<Packet> pkt)
   NS_LOG_DEBUG("pkt txTime: " << txtime.GetSeconds() << "("<<asHeader.GetSize()<<")");
   NS_LOG_DEBUG("AlohaHeader txTime: " << GetTxTime(alohaH.GetSize()) << " (" << alohaH.GetSize() << ")");
   NS_LOG_DEBUG("PropDelay: " << m_maxPropDelay);
-  double random_offset = m_rand->GetValue(0.0, 1.0);
+  double random_offset = m_rand->GetValue(0.0, 1.5);
+  if(random_offset>0.5)
+    random_offset = 0.5;
   Time ertt = Seconds(1.0 + random_offset); 
   //Time ertt = txtime + GetTxTime(alohaH.GetSize()) + GetTxTime(alohaH.GetSize()) + Seconds(m_maxPropDelay*2);
 
