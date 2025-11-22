@@ -87,7 +87,8 @@ AquaSimSimplePropagation::ReceivedCopies (Ptr<AquaSimNetDevice> s,
     dist = senderModel->GetDistanceFrom(recvModel);
     pru.recver = dList[i];
     pru.pDelay = Time::FromDouble(dist / ns3::SOUND_SPEED_IN_WATER,Time::S);
-    pru.pR = RayleighAtt(dist, pstamp.GetFreq(), pstamp.GetPt());
+    //pru.pR = RayleighAtt(dist, pstamp.GetFreq(), pstamp.GetPt());
+    pru.pR = pstamp.GetPt();
     res->push_back(pru);
 
     NS_LOG_DEBUG("dist:" << dist
@@ -111,7 +112,7 @@ AquaSimSimplePropagation::RayleighAtt (double dist, double freq, double pT)
   //resorting to 1.0 model for reliability purposes
   NS_LOG_DEBUG("RayleighAtt DUMP: dist(" << dist << ") freq(" << freq << ") pT("
     << pT << ") Rayleigh(" << Rayleigh(dist,freq) << ") pR(" << pT/Rayleigh(dist,freq) << ")");
-   return pT/Rayleigh(dist,freq);
+   return pT;
 }
 
 //2.0 version below:

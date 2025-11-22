@@ -48,7 +48,7 @@ AquaSimPhyCmn::AquaSimPhyCmn(void) :
   NS_LOG_FUNCTION(this);
 
   m_updateEnergyTime = Simulator::Now().GetSeconds();
-  m_preamble = 1.5;
+  m_preamble = 0;
   m_trigger = 0.45;
   //GetNetDevice()->SetTransmissionStatus(NIDLE);
   //SetPhyStatus(PHY_IDLE);
@@ -516,13 +516,15 @@ AquaSimPhyCmn::PrevalidateIncomingPkt(Ptr<Packet> p)
 
   // If the packet is not marked as collided (error flag is false), then delay the packet on the TxTime, to make sure that no other packets cause
   // collisions to this packet. If some packets appear within the TxTime delay interval of the given packet, then mark it as collided as well.
-  if (asHeader.GetErrorFlag() == false)
+  /*if (asHeader.GetErrorFlag() == false)
   {
     m_collision_flag = false;
     Simulator::Schedule(CalcTxTime(asHeader.GetSize()),&AquaSimPhyCmn::CollisionCheck, this, p->Copy());
     return NULL;
+  }*/
+  if (asHeader.GetErrorFlag() == false) {
+      m_collision_flag = false;
   }
-
   return p;
 }
 
@@ -658,7 +660,7 @@ AquaSimPhyCmn::SignalCacheCallback(Ptr<Packet> p) {
 
   AquaSimHeader asHeader;
   p->RemoveHeader(asHeader);
-  asHeader.SetTxTime(Seconds(0.01));	//arbitrary processing time here
+  //asHeader.SetTxTime(Seconds(0.01));	//arbitrary processing time here
   p->AddHeader(asHeader);
 
   pktRecvCounter++; //debugging...
@@ -789,14 +791,19 @@ Time
 AquaSimPhyCmn::CalcTxTime (uint32_t pktSize, std::string * modName)
 {
   //NS_ASSERT(modName == NULL);
-  return Time::FromDouble(m_modulations.find(m_modulationName)->second->TxTime(pktSize*8), Time::S)
-      + Time::FromInteger(Preamble(), Time::S);
+  double forcedBitRate = 80000.0; 
+  double duration = (pktSize * 8.0) / forcedBitRate;
+  return Time::FromDouble(duration, Time::S);
 }
 
 double
 AquaSimPhyCmn::CalcPktSize (double txTime, std::string * modName)
 {
-  return Modulation(modName)->PktSize (txTime - Preamble()) / 8.;
+  //return Modulation(modName)->PktSize (txTime - Preamble()) / 8.;
+  double forcedBitRate = 80000.0;
+  double duration = txTime - m_preamble;
+  if (duration < 0) return 0;
+  return (duration * forcedBitRate) / 8.0; // 返回字节数
 }
 
 int

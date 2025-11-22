@@ -378,13 +378,13 @@ AlohaHeader::GetPType()
 int
 AlohaHeader::GetSize()
 {
-  return 2+2+1; //src, dst, type
+  return 5; //src, dst, type
 }
 
 uint32_t
 AlohaHeader::GetSerializedSize(void) const
 {
-  return 2+2+1;
+  return 5;
 }
 void
 AlohaHeader::Serialize (Buffer::Iterator start) const

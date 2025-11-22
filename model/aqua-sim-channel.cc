@@ -164,6 +164,7 @@ AquaSimChannel::SendUp (Ptr<Packet> p, Ptr<AquaSimPhy> tifp)
 
   allPktCounter++;  //Debug... remove
   for (std::vector<PktRecvUnit>::size_type i = 0; i < recvUnits->size(); i++) {
+    //std::cout << sentPktCounter << " "<<"sentpktcounter"<<'\n';
     allRecvPktCounter++;  //Debug .. remove
     if (sender == (*recvUnits)[i].recver)
     {

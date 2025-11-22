@@ -10,7 +10,7 @@ import numpy
 import os.path
 
 
-PACKET_SIZE = 800
+PACKET_SIZE = 88
 # N_HOPS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25]
 # N_HOPS = [6, 7, 8, 9, 10]
 # N_HOPS = [0, 1]
@@ -18,12 +18,12 @@ PACKET_SIZE = 800
 # NODES = [50, 100, 150, 200, 250]
 # NODES = [25, 50, 75, 100, 125]
 # NODES = [64, 80, 96, 112, 128]
-NODES = [128]
+NODES = [4]
 
-# LAMBDAS = ['0.01', '0.02', '0.03', '0.04', '0.05', '0.06', '0.07', '0.08', '0.09', '0.10']
+# LAMBDAS = ['0.01', '0.02', '0.03', '0.04', '0.05', '0.0s6', '0.07', '0.08', '0.09', '0.10']
 # LAMBDAS = ['0.20', '0.30', '0.40', '0.50', '0.60', '0.70', '0.80', '0.90', '1.00']
 # LAMBDAS = ['0.01', '0.05', '0.10', '0.15', '0.20', '0.25', '0.30', '0.35', '0.40', '0.45', '0.50', '0.55', '0.60']
-LAMBDAS = ['0.01']
+LAMBDAS = ['0.0200']
 # LAMBDAS = ['0.20', '0.40', '0.60', '0.80']
 METRICS = ["collisions", "energy", "energy_per_bit", "throughput", "pdr", "hop_count"]
 # METRICS = ["hop_count"]
@@ -32,7 +32,7 @@ METRICS_NAMES = {"collisions": "Total number of collisions", "energy": "Total en
 VALUES = {"collisions": [], "energy": [], "energy_per_bit": [], "throughput": [], "pdr": [], "hop_count": []}
 
 
-TRACE_PATH = "../../../"
+TRACE_PATH = ""
 TRACE_NAME = "aloha-density-trace-%s-%s-0.asc"
 PRINT_FILENAME = "aloha-density-%s.txt" # insert number of nodes
 
@@ -43,7 +43,7 @@ def get_converged_stats(trace, l, n_nodes):
     
     packet_paths = {}
     attempt_number = 1
-    for i in xrange(len(trace["TS"])):
+    for i in range(len(trace["TS"])):
         if trace["RX/TX-MODE"][i] == "TX" and trace["PTYPE"][i] == "DATA":
             unique_id = trace["UNIQUE_ID"][i]
             hop = (int(trace["MAC_SRC_ADDR"][i]), int(trace["MAC_DST_ADDR"][i]))
@@ -148,14 +148,11 @@ def print_results():
         if not os.path.exists(file_name):
             f =open(file_name, "a")
             # f.write("Density\tNodesNumber\tLambda\tTxPackets\tRxPackets\tTxCount\tRxCount\tCollisionCount\tTotalEnergyConsumption\tEnergyPerBit\tTotalThroughput\tPDR\tAvgHopCount\tAvgDelay\tConvergedAttempt\tConvergeTime\tIsOptimal?\tEnergyConsumptionConvergedPath\tEnergyConsumptionOptimalPath\tOptimalConvergedRatio\n")
-            f.write("Density\tNodesNumber\tLambda\tTxPackets\tRxPackets\tTxCount\tRxCount\tCollisionCount\tTotalEnergyConsumption\tEnergyPerBit\tTotalThroughput\tPDR\n")
+            # f.write("Density\tNodesNumber\tLambda\tTxPackets\tRxPackets\tTxCount\tRxCount\tCollisionCount\tTotalEnergyConsumption\tEnergyPerBit\tTotalThroughput\tPDR\n")
 
         else:
             f =open(file_name, "a")
             
-        # line = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s"
-        line = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s"
-
         # for l in LAMBDAS:
         for n_nodes in NODES:
 
@@ -164,30 +161,48 @@ def print_results():
             x = []
 
             events = trace_parser_aloha.parse_events((TRACE_PATH + TRACE_NAME) % (l, n_nodes))
-            trace, node_info = trace_parser_aloha.parse_fields(events)
-
+            trace_parser_aloha.print_events(events)
+            
+            trace, node_info = trace_parser_aloha.parse_fields(EVENTS=events)
+            #trace_parser_aloha.print_trace(trace)
             # converged_attempts, converge_time, is_optimal, converged_path_energy, optimal_path_energy = get_converged_stats(trace, l, n_nodes)
 
             # # Print results to file
             # n_recv_packets = trace_parser_aloha.calc_recv_packets(trace)
             # total_energy = trace_parser_aloha.calc_energy_consumption(node_info)
-            # data = (n_nodes/100., n_nodes, l, trace_parser_aloha.calc_sent_packets(trace), n_recv_packets, 
-            # trace_parser_aloha.calc_tx_calls(trace), trace_parser_aloha.calc_rx_calls(trace), trace_parser_aloha.calc_total_collisions(node_info), 
+            # data = (n_nodes/100., n_nodes, l, trace_parser_aloha.calc_sent_packets(trace), n_recv_packets,
+            # trace_parser_aloha.calc_tx_calls(trace), trace_parser_aloha.calc_rx_calls(trace), trace_parser_aloha.calc_total_collisions(node_info),
             # round(total_energy, 2), round(float(total_energy) / (n_recv_packets * PACKET_SIZE * 8), 4), round(trace_parser_aloha.calc_throughput(trace), 2),
-            # round(trace_parser_aloha.calc_pdr(trace), 2), round(trace_parser_aloha.calc_hop_count(trace), 2), round(trace_parser_aloha.calc_delay(trace), 2), 
-            # converged_attempts, converge_time, is_optimal, round(converged_path_energy, 4), round(optimal_path_energy, 4), 
+            # round(trace_parser_aloha.calc_pdr(trace), 2), round(trace_parser_aloha.calc_hop_count(trace), 2), round(trace_parser_aloha.calc_delay(trace), 2),
+            # converged_attempts, converge_time, is_optimal, round(converged_path_energy, 4), round(optimal_path_energy, 4),
             # round(optimal_path_energy/converged_path_energy, 4))
 
             n_recv_packets = trace_parser_aloha.calc_recv_packets(trace)
             total_energy = trace_parser_aloha.calc_energy_consumption(node_info)
-            data = (n_nodes/100., n_nodes, l, trace_parser_aloha.calc_sent_packets(trace), n_recv_packets, 
-            trace_parser_aloha.calc_tx_calls(trace), trace_parser_aloha.calc_rx_calls(trace), trace_parser_aloha.calc_total_collisions(node_info), 
-            round(total_energy, 2), round(float(total_energy) / (n_recv_packets * PACKET_SIZE * 8), 4), round(trace_parser_aloha.calc_throughput(trace), 2),
-            round(trace_parser_aloha.calc_pdr(trace), 2))
+            energy_per_bit = 0.0
+            if n_recv_packets > 0:
+                energy_per_bit = float(total_energy) / (n_recv_packets * PACKET_SIZE * 8)
+            data = (
+                    n_nodes/100,
+                    n_nodes,
+                    l,
+                    trace_parser_aloha.calc_rx_nocol_calls(node_info),
+                    trace_parser_aloha.calc_sent_packets(trace),
+                    n_recv_packets,
+                    trace_parser_aloha.calc_tx_calls(trace),
+                    trace_parser_aloha.calc_rx_calls(trace),
+                    trace_parser_aloha.detect_tx_conflicts(trace),
+                    trace_parser_aloha.calc_total_collisions(node_info),
+                    round(total_energy, 2),
+                    round(energy_per_bit, 4),
+                    round(trace_parser_aloha.calc_throughput(trace),2),
+                    round(trace_parser_aloha.calc_pdr(trace), 2)
+                )
 
-
-            f.write(line % data)
-            # f.write(str(trace_parser_aloha.calc_hop_count(trace)))
+            # Vertical output
+            field_names = ["-Density-", "NodesNumber", "Lambda","RX", "TxPackets", "RxPackets", "TxCount", "RxCount","CollisionCounttotal", "CollisionCount", "TotalEnergyConsumption", "EnergyPerBit", "TotalThroughputBytes", "PDR"]
+            for i, field in enumerate(field_names):
+                f.write("%s: %s\n" % (field, data[i]))
             f.write("\n")
             f.flush()
 

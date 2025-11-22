@@ -34,7 +34,7 @@
 
 
 #define CALLBACK_DELAY 0.001	//the interval between two consecutive sendings
-#define MAXIMUMCOUNTER UINT16_MAX
+#define MAXIMUMCOUNTER 1000000
 //#define Broadcast -1
 
 namespace ns3 {
@@ -128,7 +128,7 @@ protected:
   Ptr<Packet> MakeACK(AquaSimAddress RTS_Sender);
 
   void	ReplyACK(Ptr<Packet> pkt);
-
+  void  RetrySent();
   //void sendACK(double DeltaTime);
 
   void	SendPkt(Ptr<Packet> pkt);//why?
