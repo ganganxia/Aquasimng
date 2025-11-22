@@ -38,16 +38,16 @@ main (int argc, char *argv[])
   double simStop = 100; //seconds
 //  double simStop = 2; //seconds
 
-  int n_nodes = 4;
+  int n_nodes = 841;
 //  int sinks = 1;
 //  uint32_t m_dataRate = 80000; // bps
   double m_dataRate = 80000; // bps
 
-  double m_packetSize = 88; // bytes
+  double m_packetSize = 54; // bytes
   double range = 1000000.0;	// meters, set to -1 to disable distance-based reception
 
   // Poisson traffic parameters
-  double lambda = 0.02;
+  double lambda = 0.01;
 
   // Grid parameters
   int max_x = 100; // meters
@@ -164,7 +164,7 @@ main (int argc, char *argv[])
 	  AquaSimApplicationHelper app ("ns3::PacketSocketFactory", n_nodes);
 
 	  //sprintf(duration_on, "ns3::ConstantRandomVariable[Constant=%f]", 0.01);
-    sprintf(duration_on, "ns3::ExponentialRandomVariable[Mean=%f]",(m_packetSize * 8) / m_dataRate);
+    sprintf(duration_on, "ns3::ExponentialRandomVariable[Mean=%f]",(60 * 8) / m_dataRate);
 	  sprintf(duration_off, "ns3::ExponentialRandomVariable[Mean=%f]",1.0 / lambda);
 //	  std::cout << "Duration On: " << duration_on << "\n";
 //	  std::cout << "Duration Off: " << duration_off << "\n";

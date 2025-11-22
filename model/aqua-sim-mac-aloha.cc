@@ -33,6 +33,7 @@
 #include "ns3/double.h"
 
 
+
 namespace ns3{
 
 NS_LOG_COMPONENT_DEFINE("AquaSimAloha");
@@ -103,7 +104,7 @@ AquaSimAloha::AssignStreams (int64_t stream)
 void AquaSimAloha::RetrySent()
 {
   //NS_LOG_FUNCTION(this);
-  Time BackoffTime=Seconds(m_rand->GetValue(m_minBackoff,m_maxBackoff));
+  Time BackoffTime=Seconds(0.0134);
   ALOHA_Status = BACKOFF;
   NS_LOG_INFO("DoBackoff: " << BackoffTime.ToDouble(Time::S));
   Simulator::Schedule(BackoffTime, &AquaSimAloha::SendDataPkt, this);
@@ -112,7 +113,7 @@ void AquaSimAloha::RetrySent()
 void AquaSimAloha::DoBackoff()
 {
   //NS_LOG_FUNCTION(this);
-  Time BackoffTime=Seconds(m_rand->GetValue(m_minBackoff,m_maxBackoff));
+  Time BackoffTime=Seconds(0.05);
   m_boCounter++;
   if (m_boCounter < MAXIMUMCOUNTER)
     {
@@ -178,7 +179,8 @@ bool AquaSimAloha::TxProcess(Ptr<Packet> pkt)
   AlohaHeader alohaH;
   pkt->RemoveHeader(asHeader);
   //pkt->RemoveHeader(alohaH);	This may need to be fixed for multi hop.
-  asHeader.SetSize(alohaH.GetSize()+asHeader.GetSize());
+  //asHeader.SetSize(alohaH.GetSize()+asHeader.GetSize());
+  asHeader.SetSize(pkt->GetSize() + 40);
   asHeader.SetTxTime(GetTxTime(asHeader.GetSize()));
   asHeader.SetErrorFlag(false);
   asHeader.SetDirection(AquaSimHeader::DOWN);
@@ -247,7 +249,7 @@ void AquaSimAloha::SendPkt(Ptr<Packet> pkt)
   NS_LOG_DEBUG("pkt txTime: " << txtime.GetSeconds() << "("<<asHeader.GetSize()<<")");
   NS_LOG_DEBUG("AlohaHeader txTime: " << GetTxTime(alohaH.GetSize()) << " (" << alohaH.GetSize() << ")");
   NS_LOG_DEBUG("PropDelay: " << m_maxPropDelay);
-  double random_offset = m_rand->GetValue(0.0, 1.5);
+  double random_offset = m_rand->GetValue(0.0, 1.0);
   Time ertt = Seconds(1.0 + random_offset); 
   //Time ertt = txtime + GetTxTime(alohaH.GetSize()) + GetTxTime(alohaH.GetSize()) + Seconds(m_maxPropDelay*2);
 
@@ -310,7 +312,7 @@ void AquaSimAloha::SendPkt(Ptr<Packet> pkt)
       NS_LOG_INFO("SendPkt: node " << m_device->GetNode() << " send data too fast");
       if( alohaH.GetPType() == AlohaHeader::ACK ) {
         pkt->AddHeader(asHeader);
-        //RetryACK(pkt);
+        RetrySent();
         ALOHA_Status = PASSIVE;
       }
       else
@@ -415,8 +417,10 @@ Ptr<Packet> AquaSimAloha::MakeACK(AquaSimAddress Data_Sender)
   AlohaHeader alohaH;
 	AquaSimPtTag ptag;
 
-  asHeader.SetSize(alohaH.GetSize());
-  asHeader.SetTxTime(GetTxTime(alohaH.GetSize()));
+  //asHeader.SetSize(alohaH.GetSize());
+  asHeader.SetSize(40);
+  asHeader.SetTxTime(GetTxTime(asHeader.GetSize()));
+  //asHeader.SetTxTime(GetTxTime(alohaH.GetSize()));
   asHeader.SetErrorFlag(false);
   asHeader.SetDirection(AquaSimHeader::DOWN);
   asHeader.SetNextHop(Data_Sender);

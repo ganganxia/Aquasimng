@@ -10,7 +10,7 @@ import numpy
 import os.path
 
 
-PACKET_SIZE = 88
+PACKET_SIZE = 54
 # N_HOPS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25]
 # N_HOPS = [6, 7, 8, 9, 10]
 # N_HOPS = [0, 1]
@@ -18,12 +18,12 @@ PACKET_SIZE = 88
 # NODES = [50, 100, 150, 200, 250]
 # NODES = [25, 50, 75, 100, 125]
 # NODES = [64, 80, 96, 112, 128]
-NODES = [4]
+NODES = [841]
 
 # LAMBDAS = ['0.01', '0.02', '0.03', '0.04', '0.05', '0.0s6', '0.07', '0.08', '0.09', '0.10']
 # LAMBDAS = ['0.20', '0.30', '0.40', '0.50', '0.60', '0.70', '0.80', '0.90', '1.00']
 # LAMBDAS = ['0.01', '0.05', '0.10', '0.15', '0.20', '0.25', '0.30', '0.35', '0.40', '0.45', '0.50', '0.55', '0.60']
-LAMBDAS = ['0.0200']
+LAMBDAS = ['0.0100']
 # LAMBDAS = ['0.20', '0.40', '0.60', '0.80']
 METRICS = ["collisions", "energy", "energy_per_bit", "throughput", "pdr", "hop_count"]
 # METRICS = ["hop_count"]
@@ -161,7 +161,7 @@ def print_results():
             x = []
 
             events = trace_parser_aloha.parse_events((TRACE_PATH + TRACE_NAME) % (l, n_nodes))
-            trace_parser_aloha.print_events(events)
+            #trace_parser_aloha.print_events(events)
             
             trace, node_info = trace_parser_aloha.parse_fields(EVENTS=events)
             #trace_parser_aloha.print_trace(trace)
