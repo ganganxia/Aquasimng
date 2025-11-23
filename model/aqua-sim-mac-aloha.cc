@@ -250,8 +250,8 @@ void AquaSimAloha::SendPkt(Ptr<Packet> pkt)
   NS_LOG_DEBUG("AlohaHeader txTime: " << GetTxTime(alohaH.GetSize()) << " (" << alohaH.GetSize() << ")");
   NS_LOG_DEBUG("PropDelay: " << m_maxPropDelay);
   double random_offset = m_rand->GetValue(0.0, 1.5);
-  if(random_offset>0.5)
-    random_offset = 0.5;
+  //if(random_offset>0.5)
+  //  random_offset = 0.5;
   Time ertt = Seconds(1.0 + random_offset); 
   //Time ertt = txtime + GetTxTime(alohaH.GetSize()) + GetTxTime(alohaH.GetSize()) + Seconds(m_maxPropDelay*2);
 
@@ -298,9 +298,9 @@ void AquaSimAloha::SendPkt(Ptr<Packet> pkt)
     case RECV:
       NS_LOG_INFO("SendPkt: RECV-SEND collision!!!");
       if( alohaH.GetPType() == AlohaHeader::ACK) {
-        //pkt->AddHeader(asHeader);
+        pkt->AddHeader(asHeader);
         //RetryACK(pkt);
-        //ALOHA_Status = PASSIVE;
+        ALOHA_Status = PASSIVE;
       }
       else
       {

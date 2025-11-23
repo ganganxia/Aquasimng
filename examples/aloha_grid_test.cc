@@ -164,7 +164,7 @@ main (int argc, char *argv[])
 	  AquaSimApplicationHelper app ("ns3::PacketSocketFactory", n_nodes);
 
 	  //sprintf(duration_on, "ns3::ConstantRandomVariable[Constant=%f]", 0.01);
-    sprintf(duration_on, "ns3::ExponentialRandomVariable[Mean=%f]",(60 * 8) / m_dataRate);
+    sprintf(duration_on, "ns3::ExponentialRandomVariable[Mean=%f]",(m_packetSize * 8) / m_dataRate);
 	  sprintf(duration_off, "ns3::ExponentialRandomVariable[Mean=%f]",1.0 / lambda);
 //	  std::cout << "Duration On: " << duration_on << "\n";
 //	  std::cout << "Duration Off: " << duration_off << "\n";
@@ -176,7 +176,7 @@ main (int argc, char *argv[])
 
 	  ApplicationContainer apps = app.Install (nodesCon.Get(j));
 
-	  apps.Start (Seconds (0.5));
+	  apps.Start (Seconds (0));
 	  apps.Stop (Seconds (simStop + 1));
 
 	  j++;
@@ -208,14 +208,14 @@ main (int argc, char *argv[])
   asHelper.EnableAsciiAll(ascii);
 
   Simulator::Run();
-  for (int i = 0; i < n_nodes; ++i) {
+/*  for (int i = 0; i < n_nodes; ++i) {
     Ptr<AquaSimNetDevice> dev = DynamicCast<AquaSimNetDevice>(devices.Get(i));
     if (dev && dev->EnergyModel()) {
         std::cout << "Node " << i
                   << " Remaining Energy: "
                   << dev->EnergyModel()->GetEnergy() << " J\n";
     }
-}
+}*/
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;
   std::cout << "Total simulation time: " << elapsed.count() << " seconds\n";
