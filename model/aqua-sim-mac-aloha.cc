@@ -104,7 +104,7 @@ AquaSimAloha::AssignStreams (int64_t stream)
 void AquaSimAloha::RetrySent()
 {
   //NS_LOG_FUNCTION(this);
-  Time BackoffTime=Seconds(0.0134);
+  Time BackoffTime=Seconds(0);
   ALOHA_Status = BACKOFF;
   NS_LOG_INFO("DoBackoff: " << BackoffTime.ToDouble(Time::S));
   Simulator::Schedule(BackoffTime, &AquaSimAloha::SendDataPkt, this);
@@ -113,7 +113,7 @@ void AquaSimAloha::RetrySent()
 void AquaSimAloha::DoBackoff()
 {
   //NS_LOG_FUNCTION(this);
-  Time BackoffTime=Seconds(0.05);
+  Time BackoffTime=Seconds(0.3);
   m_boCounter++;
   if (m_boCounter < MAXIMUMCOUNTER)
     {
@@ -250,8 +250,8 @@ void AquaSimAloha::SendPkt(Ptr<Packet> pkt)
   NS_LOG_DEBUG("AlohaHeader txTime: " << GetTxTime(alohaH.GetSize()) << " (" << alohaH.GetSize() << ")");
   NS_LOG_DEBUG("PropDelay: " << m_maxPropDelay);
   double random_offset = m_rand->GetValue(0.0, 1.5);
-  //if(random_offset>0.5)
-  //  random_offset = 0.5;
+  if(random_offset>0.5)
+    random_offset = 0.5;
   Time ertt = Seconds(1.0 + random_offset); 
   //Time ertt = txtime + GetTxTime(alohaH.GetSize()) + GetTxTime(alohaH.GetSize()) + Seconds(m_maxPropDelay*2);
 

@@ -163,20 +163,20 @@ main (int argc, char *argv[])
   {
 	  AquaSimApplicationHelper app ("ns3::PacketSocketFactory", n_nodes);
 
-	  //sprintf(duration_on, "ns3::ConstantRandomVariable[Constant=%f]", 0.01);
-    sprintf(duration_on, "ns3::ExponentialRandomVariable[Mean=%f]",(m_packetSize * 8) / m_dataRate);
+	  sprintf(duration_on, "ns3::ConstantRandomVariable[Constant=%f]", (128 * 8) / m_dataRate+0.001);
+    //sprintf(duration_on, "ns3::ExponentialRandomVariable[Mean=%f]",(m_packetSize * 8) / m_dataRate);
 	  sprintf(duration_off, "ns3::ExponentialRandomVariable[Mean=%f]",1.0 / lambda);
 //	  std::cout << "Duration On: " << duration_on << "\n";
 //	  std::cout << "Duration Off: " << duration_off << "\n";
 	  app.SetAttribute ("OnTime", StringValue (duration_on));
 	  app.SetAttribute ("OffTime", StringValue (duration_off));
-
+    app.SetAttribute ("MaxBytes",UintegerValue(128));
 	  app.SetAttribute ("DataRate", DataRateValue (m_dataRate));
 	  app.SetAttribute ("PacketSize", UintegerValue (m_packetSize));
 
 	  ApplicationContainer apps = app.Install (nodesCon.Get(j));
 
-	  apps.Start (Seconds (0));
+	  apps.Start (Seconds (1));
 	  apps.Stop (Seconds (simStop + 1));
 
 	  j++;
