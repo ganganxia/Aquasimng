@@ -34,7 +34,7 @@
 
 
 #define CALLBACK_DELAY 0.001	//the interval between two consecutive sendings
-#define MAXIMUMCOUNTER 2
+#define MAXIMUMCOUNTER 1
 //#define Broadcast -1
 
 namespace ns3 {

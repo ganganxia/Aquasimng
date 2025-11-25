@@ -113,7 +113,7 @@ void AquaSimAloha::RetrySent()
 void AquaSimAloha::DoBackoff()
 {
   //NS_LOG_FUNCTION(this);
-  Time BackoffTime=Seconds(0.3);
+  Time BackoffTime=Seconds(0);
   m_boCounter++;
   if (m_boCounter < MAXIMUMCOUNTER)
     {
