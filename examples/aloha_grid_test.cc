@@ -17,6 +17,9 @@
 
 #include <random>
 #include <math.h>
+#include <iomanip>
+#include <sstream>
+#include <chrono>
 
 /*
  * ALOHA NxN grid random destination topology tests
@@ -34,7 +37,7 @@ main (int argc, char *argv[])
   double simStop = 100; //seconds
 //  double simStop = 2; //seconds
 
-  int n_nodes = 10;
+  int n_nodes = 289;
 //  int sinks = 1;
 //  uint32_t m_dataRate = 80000; // bps
   double m_dataRate = 80000; // bps
@@ -43,7 +46,7 @@ main (int argc, char *argv[])
   double range = 1500;	// meters
 
   // Poisson traffic parameters
-  double lambda = 0.1;
+  double lambda = 0.01;
 
   // Grid parameters
   int max_x = 100; // meters
@@ -169,7 +172,7 @@ main (int argc, char *argv[])
   char buff[1000];
   // Naming convention: lambda-number_of_nodes-n_intermediate_nodes-seed
   std::stringstream stream;
-  stream << std::fixed << std::setprecision(2) << lambda;
+  stream << std::fixed << std::setprecision(4) << lambda;
   std::string lambda_string = stream.str();
   snprintf(buff, sizeof(buff), "aloha-density-trace-%s-%d-%d.asc", lambda_string.c_str(), n_nodes, 0);
   std::string asciiTraceFile = buff;
