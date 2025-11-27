@@ -516,15 +516,15 @@ AquaSimPhyCmn::PrevalidateIncomingPkt(Ptr<Packet> p)
 
   // If the packet is not marked as collided (error flag is false), then delay the packet on the TxTime, to make sure that no other packets cause
   // collisions to this packet. If some packets appear within the TxTime delay interval of the given packet, then mark it as collided as well.
-  /*if (asHeader.GetErrorFlag() == false)
+  if (asHeader.GetErrorFlag() == false)
   {
     m_collision_flag = false;
     Simulator::Schedule(CalcTxTime(asHeader.GetSize()),&AquaSimPhyCmn::CollisionCheck, this, p->Copy());
     return NULL;
-  }*/
-  if (asHeader.GetErrorFlag() == false) {
-      m_collision_flag = false;
   }
+  // if (asHeader.GetErrorFlag() == false) {
+  //     m_collision_flag = false;
+  // }
   return p;
 }
 
