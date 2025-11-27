@@ -314,7 +314,7 @@ void AquaSimAloha::SendPkt(Ptr<Packet> pkt)
       NS_LOG_INFO("SendPkt: node " << m_device->GetNode() << " send data too fast");
       if( alohaH.GetPType() == AlohaHeader::ACK ) {
         pkt->AddHeader(asHeader);
-        RetrySent();
+        // RetrySent();
         ALOHA_Status = PASSIVE;
       }
       else
