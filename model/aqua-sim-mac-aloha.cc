@@ -104,7 +104,7 @@ AquaSimAloha::AssignStreams (int64_t stream)
 void AquaSimAloha::RetrySent()
 {
   //NS_LOG_FUNCTION(this);
-  Time BackoffTime=Seconds(0);
+  Time BackoffTime=Seconds(0.5);
   ALOHA_Status = BACKOFF;
   NS_LOG_INFO("DoBackoff: " << BackoffTime.ToDouble(Time::S));
   Simulator::Schedule(BackoffTime, &AquaSimAloha::SendDataPkt, this);
