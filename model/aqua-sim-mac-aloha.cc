@@ -115,7 +115,7 @@ void AquaSimAloha::DoBackoff()
   //NS_LOG_FUNCTION(this);
   Time BackoffTime=Seconds(0);
   m_boCounter++;
-  if (m_boCounter < MAXIMUMCOUNTER)
+  if (m_boCounter <= MAXIMUMCOUNTER)
     {
       ALOHA_Status = BACKOFF;
 			NS_LOG_INFO("DoBackoff: " << BackoffTime.ToDouble(Time::S));
@@ -222,7 +222,6 @@ void AquaSimAloha::SendDataPkt()
   NS_LOG_FUNCTION(this);
   if(!PktQ_.empty())
   {
-      double P = m_rand->GetValue(0,1);
       Ptr<Packet> tmp = PktQ_.front();
       ALOHA_Status = SEND_DATA;
       SendPkt(tmp->Copy());
